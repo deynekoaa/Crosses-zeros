@@ -3,8 +3,7 @@
 #include <math.h>
 
 // the main field
-int m;	
-bool gField[3][3];
+int gField[3][3];
 
 static void ClearField();
 static void DoDrawing(cairo_t *);
@@ -19,7 +18,7 @@ static void ClearField()
 	{
 		for(j = 0; j < 3; j++)
 		{
-			gField[i][j] = FALSE;
+			gField[i][j] = 0;
 		}
 	}
 }
@@ -52,7 +51,7 @@ static void DoDrawing(cairo_t *cr)
 	{
 		for (j = 0; j < 3 ; j++ ) 
 		{	
-			if (gField[i][j] == TRUE)
+			if (gField[i][j] == 1)
 			{
 				//cairo_move_to(cr, i*100+50, j*100+50);
 				//cairo_line_to(cr, i*100+50, j*100+50);
