@@ -2,12 +2,27 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-
-static void DoDrawing(cairo_t *);
-static void DraweField(cairo_t *cr);
 // the main field
+int m;	
 bool gField[3][3];
 
+static void ClearField();
+static void DoDrawing(cairo_t *);
+static void DraweField(cairo_t *cr);
+
+
+
+static void ClearField()
+{
+	int i,j;
+	for(i = 0; i < 3; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			gField[i][j] = FALSE;
+		}
+	}
+}
 
 /*
 struct cell 
@@ -37,7 +52,7 @@ static void DoDrawing(cairo_t *cr)
 	{
 		for (j = 0; j < 3 ; j++ ) 
 		{	
-			if (gField[i][j])
+			if (gField[i][j] == TRUE)
 			{
 				//cairo_move_to(cr, i*100+50, j*100+50);
 				//cairo_line_to(cr, i*100+50, j*100+50);
@@ -48,8 +63,8 @@ static void DoDrawing(cairo_t *cr)
 		}
 	}
 
-	glob.count = 0;
-	cairo_stroke(cr);    
+	//glob.count = 0;
+	//cairo_stroke(cr);    
 }
 
 static void DraweField(cairo_t *cr)
@@ -91,13 +106,12 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		//	glob.coordx[glob.count] = event->x;
 		//	glob.coordy[glob.count++] = event->y;
 			G_CALLBACK(on_draw_event);
-		}
+	}
 
-		//if (event->button == 3) {
-		//		gtk_widget_queue_draw(widget);
-		//}
-
-		return TRUE;
+	//if (event->button == 3) {
+	//		gtk_widget_queue_draw(widget);
+	//}
+	return TRUE;
 }
 
 
@@ -133,6 +147,7 @@ int main(int argc, char *argv[])
 
 	gtk_widget_show_all(window);
 
+	ClearField();
 
 	gtk_main();
 
