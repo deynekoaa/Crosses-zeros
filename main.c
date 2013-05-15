@@ -1,5 +1,6 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
+#include <math.h>
 
 
 static void DoDrawing(cairo_t *);
@@ -38,8 +39,11 @@ static void DoDrawing(cairo_t *cr)
 		{	
 			if (gField[i][j])
 			{
-				cairo_move_to(cr, i*100+50, j*100+50);
-				cairo_line_to(cr, i*100+50, j*100+50);
+				//cairo_move_to(cr, i*100+50, j*100+50);
+				//cairo_line_to(cr, i*100+50, j*100+50);
+				cairo_translate(cr, i*100+50, j*100+50);
+				cairo_arc(cr, 0.5, 0.5, 50, 0, 2 * M_PI);
+				//cairo_stroke_preserve(cr);
 			}
 		}
 	}
