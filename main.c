@@ -3,7 +3,7 @@
 
 
 static void do_drawing(cairo_t *);
-
+static void DraweField(cairo_t *cr);
 // the main field
 int mField[3][3];
 
@@ -20,6 +20,7 @@ struct glob
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	cr = gdk_cairo_create(gtk_widget_get_window(widget));
+	DraweField(cr);
 	do_drawing(cr);
 	cairo_destroy(cr);
 	return FALSE;
@@ -112,6 +113,7 @@ int main(int argc, char *argv[])
 	gtk_window_set_title(GTK_WINDOW(window), "Crosses and zeros");
 
 	gtk_widget_show_all(window);
+
 
 	gtk_main();
 
