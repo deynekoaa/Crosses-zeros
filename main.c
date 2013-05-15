@@ -2,14 +2,14 @@
 #include <gtk/gtk.h>
 
 
-static void do_drawing(cairo_t *);
+static void DoDrawing(cairo_t *);
 static void DraweField(cairo_t *cr);
 // the main field
-int mField[3][3];
+bool gField[3][3];
 
 
 /*
-struct glob 
+struct cell 
 {
 	int count;
 	double coordx[100];
@@ -21,28 +21,31 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data
 {
 	cr = gdk_cairo_create(gtk_widget_get_window(widget));
 	DraweField(cr);
-	do_drawing(cr);
+	DoDrawing(cr);
 	cairo_destroy(cr);
 	return FALSE;
 }
 
-static void do_drawing(cairo_t *cr)
+static void DoDrawing(cairo_t *cr)
 {
-	/*
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 0.5);
 
 	int i, j;
-	for (i = 0; i <= glob.count - 1; i++ ) {
-			for (j = 0; j <= glob.count - 1; j++ ) {
-					cairo_move_to(cr, glob.coordx[i], glob.coordy[i]);
-					cairo_line_to(cr, glob.coordx[j], glob.coordy[j]);
+	for (i = 0; i < 3 ; i++ ) 
+	{
+		for (j = 0; j < 3 ; j++ ) 
+		{	
+			if (gField[i][j])
+			{
+				cairo_move_to(cr, i*100+50, j*100+50);
+				cairo_line_to(cr, i*100+50, j*100+50);
 			}
+		}
 	}
 
 	glob.count = 0;
-	cairo_stroke(cr);
-	*/    
+	cairo_stroke(cr);    
 }
 
 static void DraweField(cairo_t *cr)
@@ -61,7 +64,13 @@ static void DraweField(cairo_t *cr)
 	cairo_stroke(cr);
 }
 
+static void CellDenermination(int x, int y)
+{
+	x /= 100;
+	y /= 100;
+	gField[x][y] = 1;
 
+}
 
 
 
@@ -69,10 +78,16 @@ static void DraweField(cairo_t *cr)
 
 static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
-		//if (event->button == 1) {
-		//		glob.coordx[glob.count] = event->x;
-		//		glob.coordy[glob.count++] = event->y;
-		//}
+	if (event->button == 1) 
+	{
+		int x = event->x;
+		int y = event->y;
+		CellDenermination(x,y);
+
+		//	glob.coordx[glob.count] = event->x;
+		//	glob.coordy[glob.count++] = event->y;
+			G_CALLBACK(on_draw_event);
+		}
 
 		//if (event->button == 3) {
 		//		gtk_widget_queue_draw(widget);
