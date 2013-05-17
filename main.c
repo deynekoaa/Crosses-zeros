@@ -92,10 +92,62 @@ static void CellDenermination(int x, int y)
 	gField[x][y] = 1;
 }
 
+
+
+static void ComputerWin(int i, int y)
+{
+	gField[i][j] = 2 ;
+	GtkWidget *window2;
+    GtkWidget *darea2;
+
+	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	darea2 = gtk_drawing_area_new();
+	gtk_container_add(GTK_CONTAINER(window2), darea2);
+ 
+	gtk_widget_add_events(window2, GDK_BUTTON_PRESS_MASK);
+
+	// draw event
+	g_signal_connect(G_OBJECT(darea2), "expose-event", 
+			G_CALLBACK(on_draw_event), NULL); 
+	//destroy event = quit
+	g_signal_connect(window2, "destroy",
+			G_CALLBACK(gtk_main_quit), NULL);  
+	//clicked
+	g_signal_connect(window2, "button-press-event", 
+			G_CALLBACK(clicked), NULL);
+ 
+	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
+	gtk_window_set_default_size(GTK_WINDOW(window2), 150, 300); 
+	gtk_window_set_title(GTK_WINDOW(window2), "Computer WIN");
+
+	//caito cairo_text_extents_t extents;
+
+	const char *utf8 = "Sorry, computer win!";
+	double x,y;
+
+	cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+	cairo_set_font_size (cr, 52.0);
+	cairo_text_extents (cr, utf8, &extents);
+	//x = 128.0-(extents.width/2 + extents.x_bearing);
+	//y = 128.0-(extents.height/2 + extents.y_bearing);
+	x = 180;
+	y = 180;
+
+	cairo_move_to (cr, x, y);
+	cairo_show_text (cr, utf8);
+
+	gtk_widget_show_all(window2);
+
+	ClearField();
+
+}
+
+
+
+
 int answer = 2;
-
-
-
 
 //executing computer motion
 static void ChekingComputerWin()
@@ -126,70 +178,67 @@ static void ChekingComputerWin()
 		}
 
 		//checking horizontal win version
-		int free = -1;
-		int filling = 0;
+		free = -1;
+		filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (someBodyWin) break;
-			int free = -1;
-			int filling = 0;
 			if (gField[j][i] == answer)
 				filling++;
 			if (gField[j][i] == 0)
-				free = i;			
+				free = j;			
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
 				//computer win!
 				someBodyWin = TRUE;
-				ComputerWin(j,i);
+				ComputerWin(free,i);
 			}
 		}
 
-		//checking diagonal win version
-		for (j = 0; j < g_field_size; j++)
+		
+		//cheking only once 
+		if (i == 0)
 		{
-			if (someBodyWin) break;
-			int free = -1;
-			int filling = 0;
-			if (gField[j][j] == answer)
-				filling++;
-			if (gField[j][j] == 0)
-				free = j;			
-			if ((filling == g_field_size -1 )&&(free >= 0))
+			//checking diagonal win version
+			free = -1;
+			filling = 0;
+			for (j = 0; j < g_field_size; j++)
 			{
-				//computer win!
-				someBodyWin = TRUE;
-				ComputerWin(free,free);
+				if (someBodyWin) break;
+				if (gField[j][j] == answer)
+					filling++;
+				if (gField[j][j] == 0)
+					free = j;			
+				if ((filling == g_field_size -1 )&&(free >= 0))
+				{
+					//computer win!
+					someBodyWin = TRUE;
+					ComputerWin(free,free);
+				}
+			}
+
+			//checking reverse diagonal win version
+			free = -1;
+			filling = 0;
+			for (j = 0; j < g_field_size; j++)
+			{
+				if (someBodyWin) break;
+				if (gField[g_field_size - j][j] == answer)
+					filling++;
+				if (gField[g_field_size - j][j] == 0)
+					free = g_field_size - j;			
+				if ((filling == g_field_size -1 )&&(free >= 0))
+				{
+					//computer win!
+					someBodyWin = TRUE;
+					ComputerWin(free,j);
+				}
 			}
 		}
-
-		//checking reverse diagonal win version
-		for (j = 0; j < g_field_size; j++)
-		{
-			if (someBodyWin) break;
-			int free = -1;
-			int filling = 0;
-			if (gField[g_field_size - j][j] == answer)
-				filling++;
-			if (gField[g_field_size - j][j] == 0)
-				free = g_field_size - j;			
-			if ((filling == g_field_size -1 )&&(free >= 0))
-			{
-				//computer win!
-				someBodyWin = TRUE;
-				ComputerWin(j,j);
-			}
-		}
-
-
-
-
-
-
 	}
-
-
 }
+
+
 
 
 
@@ -213,7 +262,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 int main(int argc, char *argv[])
 {
 	
-	
+		
 	//glob.count = 0;
 
 	gtk_init(&argc, &argv);
