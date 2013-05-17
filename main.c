@@ -4,6 +4,7 @@
 
 //define
 #define g_circle_radius 45
+#define g_field_size 3
 
 
 //global contains
@@ -22,9 +23,9 @@ static void DraweField(cairo_t *cr);
 static void ClearField()
 {
 	int i,j;
-	for(i = 0; i < 3; i++)
+	for(i = 0; i < g_field_size; i++)
 	{
-		for(j = 0; j < 3; j++)
+		for(j = 0; j < g_field_size; j++)
 		{
 			gField[i][j] = 0;
 		}
@@ -47,9 +48,9 @@ static void DoDrawing(cairo_t *cr)
 	cairo_set_line_width(cr, 0.5);
 
 	int i, j;
-	for (i = 0; i < 3 ; i++ ) 
+	for (i = 0; i < g_field_size ; i++ ) 
 	{
-		for (j = 0; j < 3 ; j++ ) 
+		for (j = 0; j < g_field_size ; j++ ) 
 		{	
 			if (gField[i][j] == 1)
 			{
@@ -73,7 +74,7 @@ static void DraweField(cairo_t *cr)
 	cairo_set_line_width(cr, 4);
 	
 	int i;
-	for (i = 1; i < 3; ++i)
+	for (i = 1; i < g_field_size; ++i)
 	{
 		cairo_move_to (cr, i*100, 0);
 		cairo_line_to (cr, i*100, 300);
@@ -94,35 +95,40 @@ static void CellDenermination(int x, int y)
 int answer = 2;
 
 
-bool someBodyWin = FALSE;
+
 
 //executing computer motion
 static void ChekingComputerWin()
 {
+	bool someBodyWin = FALSE;
 	int i;
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < g_field_size; i++)
 	{
+		if (someBodyWin) break;
 		int j;
 		//checking veltical win version 
-		for (j = 0; j < 3; j++)
+		int free = -1;
+		int filling = 0;
+		for (j = 0; j < g_field_size; j++)
 		{
 			if (someBodyWin) break;
-			int free = -1;
-			int filling = 0;
+			
 			if (gField[i][j] == answer)
 				filling++;
 			if (gField[i][j] == 0)
 				free = j;			
-			if ((filling == 2)&&(free >= 0))
+			if ((filling == g_field_size -1 )&&(free >= 0))
 			{
 				//computer win!
 				someBodyWin = TRUE;
-				ComputerWin(i,j);
+				ComputerWin(i,free);
 			}
 		}
 
 		//checking horizontal win version
-		for (j = 0; j < 3; j++)
+		int free = -1;
+		int filling = 0;
+		for (j = 0; j < g_field_size; j++)
 		{
 			if (someBodyWin) break;
 			int free = -1;
@@ -131,11 +137,47 @@ static void ChekingComputerWin()
 				filling++;
 			if (gField[j][i] == 0)
 				free = i;			
-			if ((filling == 2)&&(free >= 0))
+			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
 				//computer win!
 				someBodyWin = TRUE;
 				ComputerWin(j,i);
+			}
+		}
+
+		//checking diagonal win version
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (someBodyWin) break;
+			int free = -1;
+			int filling = 0;
+			if (gField[j][j] == answer)
+				filling++;
+			if (gField[j][j] == 0)
+				free = j;			
+			if ((filling == g_field_size -1 )&&(free >= 0))
+			{
+				//computer win!
+				someBodyWin = TRUE;
+				ComputerWin(free,free);
+			}
+		}
+
+		//checking reverse diagonal win version
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (someBodyWin) break;
+			int free = -1;
+			int filling = 0;
+			if (gField[g_field_size - j][j] == answer)
+				filling++;
+			if (gField[g_field_size - j][j] == 0)
+				free = g_field_size - j;			
+			if ((filling == g_field_size -1 )&&(free >= 0))
+			{
+				//computer win!
+				someBodyWin = TRUE;
+				ComputerWin(j,j);
 			}
 		}
 
