@@ -53,11 +53,22 @@ static void DoDrawing(cairo_t *cr)
 		{	
 			if (gField[i][j] == 1)
 			{
+				//cr->save();
+  				//cr->arc(50, 50, 300 / 4.0, 0.0, 2.0 * M_PI); // full circle
+  				//cr->set_source_rgba(0.0, 0.0, 0.8, 0.6);    // partially translucent
+  				//cr->fill_preserve();
+  				//cr->restore();  // back to opaque black
+				//cr->stroke();
+
+				
+				cairo_set_source_rgb(cr, 0.69, 0.19, 0);
 				//cairo_move_to(cr, i*100+50, j*100+50);
 				//cairo_line_to(cr, i*100+50, j*100+50);
-				cairo_translate(cr, i*100+50, j*100+50);
-				cairo_arc(cr, 0.5, 0.5, 50, 0, 2 * M_PI);
-				//cairo_stroke_preserve(cr);
+				//cairo_translate(cr, i*100+50, j*100+50);
+				//cairo_scale (cr, i*100+50, j*100+50);
+				cairo_arc(cr, i*100+50, j*100+50, 46, 0, 2 * M_PI);
+				cairo_stroke_preserve(cr);
+				
 			}
 		}
 	}
@@ -69,7 +80,7 @@ static void DoDrawing(cairo_t *cr)
 static void DraweField(cairo_t *cr)
 {
 	cairo_set_source_rgb(cr, 0, 0, 0);
-	cairo_set_line_width(cr, 1);
+	cairo_set_line_width(cr, 4);
 	
 	int i;
 	for (i = 1; i < 3; ++i)
