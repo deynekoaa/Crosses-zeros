@@ -12,11 +12,14 @@ GtkWidget *window;
 GtkWidget *darea;
 // the main field
 int gField[3][3];
+int computerAnswer = 2;
+int playerAnswer = 2;
 
 
 static void ClearField();
 static void DoDrawing(cairo_t *);
 static void DraweField(cairo_t *cr);
+static void ComputerWin(int i, int j);
 
 
 
@@ -52,7 +55,7 @@ static void DoDrawing(cairo_t *cr)
 	{
 		for (j = 0; j < g_field_size ; j++ ) 
 		{	
-			if (gField[i][j] == 1)
+			if (gField[i][j] == playerAnswer)
 			{
 				cairo_set_line_width(cr, 6);
 				cairo_set_source_rgb(cr, 0.69, 0.19, 0);
@@ -89,70 +92,14 @@ static void CellDenermination(int x, int y)
 {
 	x /= 100;
 	y /= 100;
-	gField[x][y] = 1;
+	gField[x][y] = playerAnswer;
 }
 
-
-
-static void ComputerWin(int i, int y)
-{
-	gField[i][j] = 2 ;
-	GtkWidget *window2;
-    GtkWidget *darea2;
-
-	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-	darea2 = gtk_drawing_area_new();
-	gtk_container_add(GTK_CONTAINER(window2), darea2);
- 
-	gtk_widget_add_events(window2, GDK_BUTTON_PRESS_MASK);
-
-	// draw event
-	g_signal_connect(G_OBJECT(darea2), "expose-event", 
-			G_CALLBACK(on_draw_event), NULL); 
-	//destroy event = quit
-	g_signal_connect(window2, "destroy",
-			G_CALLBACK(gtk_main_quit), NULL);  
-	//clicked
-	g_signal_connect(window2, "button-press-event", 
-			G_CALLBACK(clicked), NULL);
- 
-	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size(GTK_WINDOW(window2), 150, 300); 
-	gtk_window_set_title(GTK_WINDOW(window2), "Computer WIN");
-
-	//caito cairo_text_extents_t extents;
-
-	const char *utf8 = "Sorry, computer win!";
-	double x,y;
-
-	cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-
-	cairo_set_font_size (cr, 52.0);
-	cairo_text_extents (cr, utf8, &extents);
-	//x = 128.0-(extents.width/2 + extents.x_bearing);
-	//y = 128.0-(extents.height/2 + extents.y_bearing);
-	x = 180;
-	y = 180;
-
-	cairo_move_to (cr, x, y);
-	cairo_show_text (cr, utf8);
-
-	gtk_widget_show_all(window2);
-
-	ClearField();
-
-}
-
-
-
-
-int answer = 2;
 
 //executing computer motion
 static void ChekingComputerWin()
 {
-	bool someBodyWin = FALSE;
+	gboolean someBodyWin = FALSE;
 	int i;
 	for (i = 0; i < g_field_size; i++)
 	{
@@ -165,7 +112,7 @@ static void ChekingComputerWin()
 		{
 			if (someBodyWin) break;
 			
-			if (gField[i][j] == answer)
+			if (gField[i][j] == computerAnswer)
 				filling++;
 			if (gField[i][j] == 0)
 				free = j;			
@@ -183,7 +130,7 @@ static void ChekingComputerWin()
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (someBodyWin) break;
-			if (gField[j][i] == answer)
+			if (gField[j][i] == computerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
 				free = j;			
@@ -205,7 +152,7 @@ static void ChekingComputerWin()
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (someBodyWin) break;
-				if (gField[j][j] == answer)
+				if (gField[j][j] == computerAnswer)
 					filling++;
 				if (gField[j][j] == 0)
 					free = j;			
@@ -223,7 +170,7 @@ static void ChekingComputerWin()
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (someBodyWin) break;
-				if (gField[g_field_size - j][j] == answer)
+				if (gField[g_field_size - j][j] == computerAnswer)
 					filling++;
 				if (gField[g_field_size - j][j] == 0)
 					free = g_field_size - j;			
@@ -257,6 +204,65 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	//}
 	return TRUE;
 }
+
+
+static void ComputerWin(int i, int j)
+{
+	gField[i][j] = 2 ;
+
+	GtkWidget *window2;
+    GtkWidget *darea2;
+
+	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	darea2 = gtk_drawing_area_new();
+	gtk_container_add(GTK_CONTAINER(window2), darea2);
+ 
+	gtk_widget_add_events(window2, GDK_BUTTON_PRESS_MASK);
+
+	// draw event
+	g_signal_connect(G_OBJECT(darea2), "expose-event", 
+			G_CALLBACK(on_draw_event), NULL); 
+	//destroy event = quit
+	g_signal_connect(window2, "destroy",
+			G_CALLBACK(gtk_main_quit), NULL);  
+	//clicked
+	g_signal_connect(window2, "button-press-event", 
+			G_CALLBACK(clicked), NULL);
+ 
+	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
+	gtk_window_set_default_size(GTK_WINDOW(window2), 150, 300); 
+	gtk_window_set_title(GTK_WINDOW(window2), "Computer WIN");
+
+	cairo_t *cr2 = gdk_cairo_create(gtk_widget_get_window(window2));
+
+	//caito cairo_text_extents_t extents;
+
+	const char *utf8 = "Sorry, computer win!";
+	double x,y;
+
+	cairo_select_font_face (cr2, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+	cairo_set_font_size (cr2, 52.0);
+	//cairo_text_extents (cr2, utf8, &extents);
+	//x = 128.0-(extents.width/2 + extents.x_bearing);
+	//y = 128.0-(extents.height/2 + extents.y_bearing);
+	x = 100;
+	y = 100;
+
+	cairo_move_to (cr2, x, y);
+	cairo_show_text (cr2, utf8);
+
+	gtk_widget_show_all(window2);
+
+	ClearField();
+
+}
+
+
+
+
+
 
 
 int main(int argc, char *argv[])
