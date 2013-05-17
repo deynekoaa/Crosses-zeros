@@ -2,6 +2,14 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
+//define
+#define g_circle_radius 45
+
+GtkWidget *window;
+GtkWidget *darea;
+
+
+
 // the main field
 int gField[3][3];
 
@@ -53,22 +61,12 @@ static void DoDrawing(cairo_t *cr)
 		{	
 			if (gField[i][j] == 1)
 			{
-				//cr->save();
-  				//cr->arc(50, 50, 300 / 4.0, 0.0, 2.0 * M_PI); // full circle
-  				//cr->set_source_rgba(0.0, 0.0, 0.8, 0.6);    // partially translucent
-  				//cr->fill_preserve();
-  				//cr->restore();  // back to opaque black
-				//cr->stroke();
-
-				
+				cairo_set_line_width(cr, 6);
 				cairo_set_source_rgb(cr, 0.69, 0.19, 0);
-				//cairo_move_to(cr, i*100+50, j*100+50);
-				//cairo_line_to(cr, i*100+50, j*100+50);
-				//cairo_translate(cr, i*100+50, j*100+50);
-				//cairo_scale (cr, i*100+50, j*100+50);
-				cairo_arc(cr, i*100+50, j*100+50, 46, 0, 2 * M_PI);
+				cairo_move_to(cr, i*100+50+g_circle_radius, j*100+50);
+				cairo_arc(cr, i*100+50, j*100+50, g_circle_radius, 0, 2 * M_PI);
 				cairo_stroke_preserve(cr);
-				
+				//cairo_close_path(cr);
 			}
 		}
 	}
@@ -93,12 +91,12 @@ static void DraweField(cairo_t *cr)
 	cairo_stroke(cr);
 }
 
+//determinate where mouse coordinate
 static void CellDenermination(int x, int y)
 {
 	x /= 100;
 	y /= 100;
 	gField[x][y] = 1;
-
 }
 
 
@@ -112,10 +110,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		int x = event->x;
 		int y = event->y;
 		CellDenermination(x,y);
-
-		//	glob.coordx[glob.count] = event->x;
-		//	glob.coordy[glob.count++] = event->y;
-			G_CALLBACK(on_draw_event);
+		gtk_widget_queue_draw(window);
 	}
 
 	//if (event->button == 3) {
@@ -127,8 +122,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 
 int main(int argc, char *argv[])
 {
-	GtkWidget *window;
-	GtkWidget *darea;
+	
 	
 	//glob.count = 0;
 
