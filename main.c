@@ -5,13 +5,13 @@
 //define
 #define g_circle_radius 45
 
+
+//global contains
 GtkWidget *window;
 GtkWidget *darea;
-
-
-
 // the main field
 int gField[3][3];
+
 
 static void ClearField();
 static void DoDrawing(cairo_t *);
@@ -31,14 +31,6 @@ static void ClearField()
 	}
 }
 
-/*
-struct cell 
-{
-	int count;
-	double coordx[100];
-	double coordy[100];
-};
-*/
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
@@ -99,7 +91,63 @@ static void CellDenermination(int x, int y)
 	gField[x][y] = 1;
 }
 
+int answer = 2;
 
+
+bool someBodyWin = FALSE;
+
+//executing computer motion
+static void ChekingComputerWin()
+{
+	int i;
+	for (i = 0; i < 3; i++)
+	{
+		int j;
+		//checking veltical win version 
+		for (j = 0; j < 3; j++)
+		{
+			if (someBodyWin) break;
+			int free = -1;
+			int filling = 0;
+			if (gField[i][j] == answer)
+				filling++;
+			if (gField[i][j] == 0)
+				free = j;			
+			if ((filling == 2)&&(free >= 0))
+			{
+				//computer win!
+				someBodyWin = TRUE;
+				ComputerWin(i,j);
+			}
+		}
+
+		//checking horizontal win version
+		for (j = 0; j < 3; j++)
+		{
+			if (someBodyWin) break;
+			int free = -1;
+			int filling = 0;
+			if (gField[j][i] == answer)
+				filling++;
+			if (gField[j][i] == 0)
+				free = i;			
+			if ((filling == 2)&&(free >= 0))
+			{
+				//computer win!
+				someBodyWin = TRUE;
+				ComputerWin(j,i);
+			}
+		}
+
+
+
+
+
+
+	}
+
+
+}
 
 
 
