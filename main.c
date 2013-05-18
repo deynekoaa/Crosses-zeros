@@ -13,7 +13,7 @@ GtkWidget *darea;
 // the main field
 int gField[3][3];
 int computerAnswer = 2;
-int playerAnswer = 2;
+int playerAnswer = 1;
 
 
 static void ClearField();
@@ -120,7 +120,7 @@ static void ChekingComputerWin()
 			{
 				//computer win!
 				someBodyWin = TRUE;
-				ComputerWin(i,free);
+				PreformComputerMove(i,free);
 			}
 		}
 
@@ -138,7 +138,7 @@ static void ChekingComputerWin()
 			{
 				//computer win!
 				someBodyWin = TRUE;
-				ComputerWin(free,i);
+				PreformComputerMove(free,i);
 			}
 		}
 
@@ -160,7 +160,7 @@ static void ChekingComputerWin()
 				{
 					//computer win!
 					someBodyWin = TRUE;
-					ComputerWin(free,free);
+					PreformComputerMove(free,free);
 				}
 			}
 
@@ -178,12 +178,112 @@ static void ChekingComputerWin()
 				{
 					//computer win!
 					someBodyWin = TRUE;
-					ComputerWin(free,j);
+					PreformComputerMove(free,j);
 				}
 			}
 		}
 	}
 }
+
+//executing computer motion
+static void ChekingPlayerWin()
+{
+	gboolean foundDanger = FALSE;
+	int i;
+	for (i = 0; i < g_field_size; i++)
+	{
+		if (foundDanger) break;
+		int j;
+		//checking veltical win version 
+		int free = -1;
+		int filling = 0;
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (foundDanger) break;
+			
+			if (gField[i][j] == playerAnswer)
+				filling++;
+			if (gField[i][j] == 0)
+				free = j;			
+			if ((filling == g_field_size -1 )&&(free >= 0))
+			{
+				//found dangerous situation
+				foundDanger = TRUE;
+				PreformComputerMove(i,free);
+			}
+		}
+
+		//checking horizontal win version
+		free = -1;
+		filling = 0;
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (foundDanger) break;
+			if (gField[j][i] == playerAnswer)
+				filling++;
+			if (gField[j][i] == 0)
+				free = j;			
+			if ((filling == g_field_size - 1)&&(free >= 0))
+			{
+				
+				//found dangerous situation
+				foundDanger = TRUE;
+				PreformComputerMove(free,i);
+			}
+		}
+
+		
+		//cheking only once 
+		if (i == 0)
+		{
+			//checking diagonal win version
+			free = -1;
+			filling = 0;
+			for (j = 0; j < g_field_size; j++)
+			{
+				if (foundDanger) break;
+				if (gField[j][j] == playerAnswer)
+					filling++;
+				if (gField[j][j] == 0)
+					free = j;			
+				if ((filling == g_field_size -1 )&&(free >= 0))
+				{
+
+					
+				//found dangerous situation
+				foundDanger = TRUE;
+				PreformComputerMove(free,free);
+				}
+			}
+
+			//checking reverse diagonal win version
+			free = -1;
+			filling = 0;
+			for (j = 0; j < g_field_size; j++)
+			{
+				if (foundDanger) break;
+				if (gField[g_field_size - j][j] == playerAnswer)
+					filling++;
+				if (gField[g_field_size - j][j] == 0)
+					free = g_field_size - j;			
+				if ((filling == g_field_size -1 )&&(free >= 0))
+				{
+					//found dangerous situation
+					foundDanger = TRUE;
+					PreformComputerMove(free,j);
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -196,6 +296,8 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		int x = event->x;
 		int y = event->y;
 		CellDenermination(x,y);
+		ChekingPlayerWin();
+		ChekingComputerWin();
 		gtk_widget_queue_draw(darea);
 	}
 
@@ -206,7 +308,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 }
 
 
-static void ComputerWin(int i, int j)
+static void PreformComputerMove(int i, int j)
 {
 	gField[i][j] = 2 ;
 
@@ -291,7 +393,8 @@ int main(int argc, char *argv[])
 			G_CALLBACK(clicked), NULL);
  
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size(GTK_WINDOW(window), 300, 300); 
+	//gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
+	gtk_window_set_default_size(GTK_WINDOW(window), 300, 300);
 	gtk_window_set_title(GTK_WINDOW(window), "Crosses and zeros");
 
 	gtk_widget_show_all(window);
