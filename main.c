@@ -196,7 +196,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		int x = event->x;
 		int y = event->y;
 		CellDenermination(x,y);
-		gtk_widget_queue_draw(window);
+		gtk_widget_queue_draw(darea);
 	}
 
 	//if (event->button == 3) {
@@ -210,6 +210,7 @@ static void ComputerWin(int i, int j)
 {
 	gField[i][j] = 2 ;
 
+	//new window
 	GtkWidget *window2;
     GtkWidget *darea2;
 
@@ -235,8 +236,8 @@ static void ComputerWin(int i, int j)
 	gtk_window_set_title(GTK_WINDOW(window2), "Computer WIN");
 
 	cairo_t *cr2 = gdk_cairo_create(gtk_widget_get_window(window2));
-
-	//caito cairo_text_extents_t extents;
+	
+	cairo_text_extents_t extents;
 
 	const char *utf8 = "Sorry, computer win!";
 	double x,y;
@@ -244,11 +245,10 @@ static void ComputerWin(int i, int j)
 	cairo_select_font_face (cr2, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 
 	cairo_set_font_size (cr2, 52.0);
-	//cairo_text_extents (cr2, utf8, &extents);
-	//x = 128.0-(extents.width/2 + extents.x_bearing);
-	//y = 128.0-(extents.height/2 + extents.y_bearing);
-	x = 100;
-	y = 100;
+	cairo_text_extents (cr2, utf8, &extents);
+	x = 128.0-(extents.width/2 + extents.x_bearing);
+	y = 128.0-(extents.height/2 + extents.y_bearing);
+	
 
 	cairo_move_to (cr2, x, y);
 	cairo_show_text (cr2, utf8);
