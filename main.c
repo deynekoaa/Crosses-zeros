@@ -120,7 +120,7 @@ static void ChekingComputerWin()
 		if (gcomputerWin) break;
 		int j;
 		//checking veltical win version 
-		int free = 0;
+		int free = -1;
 		int filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
@@ -139,7 +139,7 @@ static void ChekingComputerWin()
 		}
 
 		//checking horizontal win version
-		free = 0;
+		free = -1;
 		filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
@@ -161,7 +161,7 @@ static void ChekingComputerWin()
 		if (i == 0)
 		{
 			//checking diagonal win version
-			free = 0;
+			free = -1;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
@@ -179,7 +179,7 @@ static void ChekingComputerWin()
 			}
 
 			//checking reverse diagonal win version
-			free = 0;
+			free = -1;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
@@ -209,7 +209,7 @@ static void ChekingPlayerCanWin()
 		if (gfoundDanger) break;
 		int j;
 		//checking veltical win version 
-		int free = 0;
+		int free = -1;
 		int filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
@@ -228,7 +228,7 @@ static void ChekingPlayerCanWin()
 		}
 
 		//checking horizontal win version
-		free = 0;
+		free = -1;
 		filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
@@ -251,7 +251,7 @@ static void ChekingPlayerCanWin()
 		if (i == 0)
 		{
 			//checking diagonal win version
-			free = 0;
+			free = -1;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
@@ -262,29 +262,27 @@ static void ChekingPlayerCanWin()
 					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
-
-					
-				//found dangerous situation
-				gfoundDanger = TRUE;
-				ComputerMove(free,free);
+					//found dangerous situation
+					gfoundDanger = TRUE;
+					ComputerMove(free,free);
 				}
 			}
 
 			//checking reverse diagonal win version
-			free = 0;
+			free = -1;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (gfoundDanger) break;
-				if (gField[g_field_size - j][j] == playerAnswer)
+				if (gField[g_field_size - j-1][j] == playerAnswer)
 					filling++;
-				if (gField[g_field_size - j][j] == 0)
-					free = g_field_size - j;			
+				if (gField[g_field_size - j-1][j] == 0)
+					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
 					//found dangerous situation
 					gfoundDanger = TRUE;
-					ComputerMove(free,j);
+					ComputerMove(g_field_size - free - 1,free);
 				}
 			}
 		}
