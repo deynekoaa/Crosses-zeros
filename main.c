@@ -14,12 +14,16 @@ GtkWidget *darea;
 int gField[3][3];
 int computerAnswer = 2;
 int playerAnswer = 1;
+gboolean gcomputerWin = FALSE;
+gboolean gfoundDanger = FALSE;
+gboolean gplayerWin = FALSE;
 
 
 static void ClearField();
 static void DoDrawing(cairo_t *);
 static void DraweField(cairo_t *cr);
 static void ComputerWin(int i, int j);
+static void ComputerMove(int i, int j);	
 
 
 
@@ -64,6 +68,16 @@ static void DoDrawing(cairo_t *cr)
 				cairo_stroke_preserve(cr);
 				//cairo_close_path(cr);
 			}
+			if (gField[i][j] == computerAnswer)
+			{
+				cairo_set_line_width(cr, 6);
+				cairo_set_source_rgb(cr, 0.69, 0.19, 0);
+				cairo_move_to(cr, (i+1)*100-5, (j+1)*100-5);
+				cairo_line_to(cr, i*100+5, j*100+5);
+				cairo_move_to(cr, i*100+5, j*100+5);
+				cairo_line_to(cr, (i+1)*100-5, (j-1)*100-5);
+				cairo_stroke_preserve(cr);
+			}
 		}
 	}
 
@@ -99,18 +113,18 @@ static void CellDenermination(int x, int y)
 //executing computer motion
 static void ChekingComputerWin()
 {
-	gboolean someBodyWin = FALSE;
+	gcomputerWin = FALSE;
 	int i;
 	for (i = 0; i < g_field_size; i++)
 	{
-		if (someBodyWin) break;
+		if (gcomputerWin) break;
 		int j;
 		//checking veltical win version 
-		int free = -1;
+		int free = 0;
 		int filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
-			if (someBodyWin) break;
+			if (gcomputerWin) break;
 			
 			if (gField[i][j] == computerAnswer)
 				filling++;
@@ -119,17 +133,17 @@ static void ChekingComputerWin()
 			if ((filling == g_field_size -1 )&&(free >= 0))
 			{
 				//computer win!
-				someBodyWin = TRUE;
-				PreformComputerMove(i,free);
+				gcomputerWin = TRUE;
+				ComputerMove(i,free);
 			}
 		}
 
 		//checking horizontal win version
-		free = -1;
+		free = 0;
 		filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
-			if (someBodyWin) break;
+			if (gcomputerWin) break;
 			if (gField[j][i] == computerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
@@ -137,8 +151,8 @@ static void ChekingComputerWin()
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
 				//computer win!
-				someBodyWin = TRUE;
-				PreformComputerMove(free,i);
+				gcomputerWin = TRUE;
+				ComputerMove(free,i);
 			}
 		}
 
@@ -147,11 +161,11 @@ static void ChekingComputerWin()
 		if (i == 0)
 		{
 			//checking diagonal win version
-			free = -1;
+			free = 0;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
-				if (someBodyWin) break;
+				if (gcomputerWin) break;
 				if (gField[j][j] == computerAnswer)
 					filling++;
 				if (gField[j][j] == 0)
@@ -159,17 +173,17 @@ static void ChekingComputerWin()
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
 					//computer win!
-					someBodyWin = TRUE;
-					PreformComputerMove(free,free);
+					gcomputerWin = TRUE;
+					ComputerMove(free,free);
 				}
 			}
 
 			//checking reverse diagonal win version
-			free = -1;
+			free = 0;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
-				if (someBodyWin) break;
+				if (gcomputerWin) break;
 				if (gField[g_field_size - j][j] == computerAnswer)
 					filling++;
 				if (gField[g_field_size - j][j] == 0)
@@ -177,8 +191,8 @@ static void ChekingComputerWin()
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
 					//computer win!
-					someBodyWin = TRUE;
-					PreformComputerMove(free,j);
+					gcomputerWin = TRUE;
+					ComputerMove(free,j);
 				}
 			}
 		}
@@ -186,20 +200,20 @@ static void ChekingComputerWin()
 }
 
 //executing computer motion
-static void ChekingPlayerWin()
+static void ChekingPlayerCanWin()
 {
-	gboolean foundDanger = FALSE;
+	gfoundDanger = FALSE;
 	int i;
 	for (i = 0; i < g_field_size; i++)
 	{
-		if (foundDanger) break;
+		if (gfoundDanger) break;
 		int j;
 		//checking veltical win version 
-		int free = -1;
+		int free = 0;
 		int filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
-			if (foundDanger) break;
+			if (gfoundDanger) break;
 			
 			if (gField[i][j] == playerAnswer)
 				filling++;
@@ -208,17 +222,17 @@ static void ChekingPlayerWin()
 			if ((filling == g_field_size -1 )&&(free >= 0))
 			{
 				//found dangerous situation
-				foundDanger = TRUE;
-				PreformComputerMove(i,free);
+				gfoundDanger = TRUE;
+				ComputerMove(i,free);
 			}
 		}
 
 		//checking horizontal win version
-		free = -1;
+		free = 0;
 		filling = 0;
 		for (j = 0; j < g_field_size; j++)
 		{
-			if (foundDanger) break;
+			if (gfoundDanger) break;
 			if (gField[j][i] == playerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
@@ -227,8 +241,8 @@ static void ChekingPlayerWin()
 			{
 				
 				//found dangerous situation
-				foundDanger = TRUE;
-				PreformComputerMove(free,i);
+				gfoundDanger = TRUE;
+				ComputerMove(free,i);
 			}
 		}
 
@@ -237,11 +251,11 @@ static void ChekingPlayerWin()
 		if (i == 0)
 		{
 			//checking diagonal win version
-			free = -1;
+			free = 0;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
-				if (foundDanger) break;
+				if (gfoundDanger) break;
 				if (gField[j][j] == playerAnswer)
 					filling++;
 				if (gField[j][j] == 0)
@@ -251,17 +265,17 @@ static void ChekingPlayerWin()
 
 					
 				//found dangerous situation
-				foundDanger = TRUE;
-				PreformComputerMove(free,free);
+				gfoundDanger = TRUE;
+				ComputerMove(free,free);
 				}
 			}
 
 			//checking reverse diagonal win version
-			free = -1;
+			free = 0;
 			filling = 0;
 			for (j = 0; j < g_field_size; j++)
 			{
-				if (foundDanger) break;
+				if (gfoundDanger) break;
 				if (gField[g_field_size - j][j] == playerAnswer)
 					filling++;
 				if (gField[g_field_size - j][j] == 0)
@@ -269,23 +283,82 @@ static void ChekingPlayerWin()
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
 					//found dangerous situation
-					foundDanger = TRUE;
-					PreformComputerMove(free,j);
+					gfoundDanger = TRUE;
+					ComputerMove(free,j);
 				}
 			}
 		}
 	}
 }
 
+static void ChekingPlayerExactlyWin()
+{
+	//player exactly win
+	gplayerWin = FALSE;
+	int i;
+	for (i = 0; i < g_field_size; i++)
+	{
+		if (gplayerWin) break;
+		int j;
+		//checking veltical version 
+		int filling = 0;
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (gplayerWin) break;
+			if (gField[i][j] == playerAnswer)
+				filling++;
+			if (filling == g_field_size)
+			{
+				gplayerWin = TRUE;
+			}
+		}
 
+		//checking horizontal version
+		filling = 0;
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (gplayerWin) break;
+			if (gField[j][i] == playerAnswer)
+				filling++;
+			if (filling == g_field_size)
+			{
+				
+				gplayerWin = TRUE;
+			}
+		}
 
+		
+		//cheking only once 
+		if (i == 0)
+		{
+			//checking diagonal version
+			filling = 0;
+			for (j = 0; j < g_field_size; j++)
+			{
+				if (gplayerWin) break;
+				if (gField[j][j] == playerAnswer)
+					filling++;
+				if (filling == g_field_size)
+				{
+					gplayerWin = TRUE;
+				}
+			}
 
-
-
-
-
-
-
+			//checking reverse diagonal version
+			filling = 0;
+			for (j = 0; j < g_field_size; j++)
+			{
+				if (gplayerWin) break;
+				if (gField[g_field_size - j][j] == playerAnswer)
+					filling++;
+				if (filling == g_field_size)
+				{
+					gplayerWin = TRUE;
+				}
+			}
+		}
+	}
+}
 
 
 
@@ -296,9 +369,35 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		int x = event->x;
 		int y = event->y;
 		CellDenermination(x,y);
-		ChekingPlayerWin();
-		ChekingComputerWin();
-		gtk_widget_queue_draw(darea);
+		gplayerWin = FALSE;
+		ChekingPlayerExactlyWin();
+		if (gplayerWin)
+		{
+			//player exatly win, we must say about it
+			gtk_widget_queue_draw(darea);
+		}
+		else
+		{
+			gComputerWin = FALSE;
+			ChekingComputerWin();
+			if (gComputerWin)
+			{
+				//computer do step and win, we must draw and say about it
+				gtk_widget_queue_draw(darea);
+			}
+			else 
+			{
+				gfoundDanger = FALSE;
+				ChekingPlayerCanWin();
+				if (gfoundDanger)
+				{
+						//computer block player win step, and continue game
+				}
+				gtk_widget_queue_draw(darea);
+			}
+		}
+		
+		
 	}
 
 	//if (event->button == 3) {
@@ -307,11 +406,12 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	return TRUE;
 }
 
-
-static void PreformComputerMove(int i, int j)
+	
+static void ComputerMove(int i, int j)
 {
-	gField[i][j] = 2 ;
-
+	gField[i][j] = computerAnswer;
+}
+	/*
 	//new window
 	GtkWidget *window2;
     GtkWidget *darea2;
@@ -358,12 +458,7 @@ static void PreformComputerMove(int i, int j)
 	gtk_widget_show_all(window2);
 
 	ClearField();
-
-}
-
-
-
-
+	*/
 
 
 
