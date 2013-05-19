@@ -378,9 +378,9 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		}
 		else
 		{
-			gComputerWin = FALSE;
+			gcomputerWin = FALSE;
 			ChekingComputerWin();
-			if (gComputerWin)
+			if (gcomputerWin)
 			{
 				//computer do step and win, we must draw and say about it
 				gtk_widget_queue_draw(darea);
