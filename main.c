@@ -74,8 +74,8 @@ static void DoDrawing(cairo_t *cr)
 				cairo_set_source_rgb(cr, 0.69, 0.19, 0);
 				cairo_move_to(cr, (i+1)*100-5, (j+1)*100-5);
 				cairo_line_to(cr, i*100+5, j*100+5);
-				cairo_move_to(cr, i*100+5, j*100+5);
-				cairo_line_to(cr, (i+1)*100-5, (j-1)*100-5);
+				cairo_move_to(cr, (i+1)*100-5, j*100+5);
+				cairo_line_to(cr, i*100+5, (j+1)*100-5);
 				cairo_stroke_preserve(cr);
 			}
 		}
@@ -147,12 +147,12 @@ static void ChekingComputerWin()
 			if (gField[j][i] == computerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
-				free = j;			
+				free = i;			
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
 				//computer win!
 				gcomputerWin = TRUE;
-				ComputerMove(free,i);
+				ComputerMove(free,j);
 			}
 		}
 
