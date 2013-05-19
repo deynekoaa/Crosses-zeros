@@ -439,96 +439,47 @@ static void ComputerMove(int i, int j)
 
 void button_clicked(GtkWidget *widget, gpointer data)
 {
-	g_print("clicked\n");
+	gtk_widget_destroy(GTK_WIDGET(data));
 }
 
-static void ResultWindow()
+void close_window(GtkWidget *widget, gpointer window)
+{
+    gtk_widget_destroy(GTK_WIDGET(widget));
+}
+
+static void ResultWindow(char* string)
 {
 	GtkWidget *window;
   	GtkWidget *fixed;
   	GtkWidget *button;
-
-  	//gtk_init(&argc, &argv);
-
+  	GtkWidget *info;
+  	
   	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  	gtk_window_set_title(GTK_WINDOW(window), "GtkButton");
-  	gtk_window_set_default_size(GTK_WINDOW(window), 230, 150);
-  	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+  	gtk_window_set_title(GTK_WINDOW(window), "Information");
+  	gtk_widget_set_size_request(window, 200, 100);
+	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
   	fixed = gtk_fixed_new();
   	gtk_container_add(GTK_CONTAINER(window), fixed);
 
-  	button = gtk_button_new_with_label("Click");
-  	gtk_fixed_put(GTK_FIXED(fixed), button, 50, 50);
+  	info = gtk_label_new(string);
+  	gtk_widget_set_size_request(info, 80, 35);
+  	gtk_fixed_put(GTK_FIXED(fixed), info, 50, 30);
+
+
+  	button = gtk_button_new_with_label("OK");
+  	gtk_fixed_put(GTK_FIXED(fixed), button, 50, 80);
   	gtk_widget_set_size_request(button, 80, 35);
 
   	g_signal_connect(G_OBJECT(button), "clicked", 
-        G_CALLBACK(button_clicked), NULL);
-
+       G_CALLBACK(button_clicked), window;
+  	
   	g_signal_connect(G_OBJECT(window), "destroy", 
-    	G_CALLBACK(gtk_main_quit), NULL);
+    	G_CALLBACK(close_window), NULL);
 
   	gtk_widget_show_all(window);
-
-  	//gtk_main();
-
-  	//return 0;
 }
-
-
-
-
-
-
-
-
-	//new window
-	/*GtkWidget *window2;
-    GtkWidget *darea2;
-
-	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-	darea2 = gtk_drawing_area_new();
-	gtk_container_add(GTK_CONTAINER(window2), darea2);
- 
-	gtk_widget_add_events(window2, GDK_BUTTON_PRESS_MASK);
-
-	// draw event
-	g_signal_connect(G_OBJECT(darea2), "expose-event", 
-			G_CALLBACK(on_draw_event), NULL); 
-	//destroy event = quit
-	g_signal_connect(window2, "destroy",
-			G_CALLBACK(gtk_main_quit), NULL);  
-	//clicked
-	g_signal_connect(window2, "button-press-event", 
-			G_CALLBACK(clicked), NULL);
- 
-	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size(GTK_WINDOW(window2), 150, 300); 
-	gtk_window_set_title(GTK_WINDOW(window2), "Computer WIN");
-
-	cairo_t *cr2 = gdk_cairo_create(gtk_widget_get_window(window2));
-	
-	cairo_text_extents_t extents;
-
-	const char *utf8 = "Sorry, computer win!";
-	double x,y;
-
-	cairo_select_font_face (cr2, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-
-	cairo_set_font_size (cr2, 52.0);
-	cairo_text_extents (cr2, utf8, &extents);
-	x = 128.0-(extents.width/2 + extents.x_bearing);
-	y = 128.0-(extents.height/2 + extents.y_bearing);
-	
-
-	cairo_move_to (cr2, x, y);
-	cairo_show_text (cr2, utf8);
-
-	gtk_widget_show_all(window2);
-
-	ClearField();
-	*/
 
 
 
@@ -559,8 +510,10 @@ int main(int argc, char *argv[])
  
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	//gtk_window_set_resizable(GTK_WINDOW(window), FALSE); 
-	gtk_window_set_default_size(GTK_WINDOW(window), 300, 300);
+	//gtk_window_set_default_size(GTK_WINDOW(window), 300, 300);
+	gtk_widget_set_size_request(window, 300, 300);
 	gtk_window_set_title(GTK_WINDOW(window), "Crosses and zeros");
+	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
 	gtk_widget_show_all(window);
 
