@@ -389,9 +389,30 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				ChekingPlayerCanWin();
 				if (gfoundDanger)
 				{
-						//computer block player win step, and continue game
+					//computer block player win step, and continue game
+					gtk_widget_queue_draw(darea);
 				}
-				gtk_widget_queue_draw(darea);
+				else
+				{
+					if (gField[1][1] == 0)
+					{
+						gField[1][1] == computerAnswer;
+					}
+					else
+					{
+						int m,k;
+						do 
+						{
+							srand(time(NULL));
+							k = (rand()/3)-1;
+							m = (rand()/3)-1
+						}
+						while (gField[k][m] != 0);
+						gField[k][m] = computerAnswer;
+					}
+					gtk_widget_queue_draw(darea);		
+				}
+				
 			}
 		}
 		
