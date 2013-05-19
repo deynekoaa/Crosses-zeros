@@ -396,7 +396,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				{
 					if (gField[1][1] == 0)
 					{
-						gField[1][1] == computerAnswer;
+						gField[1][1] = computerAnswer;
 					}
 					else
 					{
