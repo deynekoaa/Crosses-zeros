@@ -454,9 +454,15 @@ static void ResultWindow(char* string)
   	GtkWidget *button;
   	GtkWidget *info;
   	
+  	#ifdef DEBUG
+  		string = "Congratulation, you win!";
+  	#endif
+
+
+
   	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   	gtk_window_set_title(GTK_WINDOW(window), "Information");
-  	gtk_widget_set_size_request(window, 200, 100);
+  	gtk_widget_set_size_request(window, 300, 100);
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
@@ -464,16 +470,16 @@ static void ResultWindow(char* string)
   	gtk_container_add(GTK_CONTAINER(window), fixed);
 
   	info = gtk_label_new(string);
-  	gtk_widget_set_size_request(info, 80, 35);
-  	gtk_fixed_put(GTK_FIXED(fixed), info, 50, 30);
+  	gtk_widget_set_size_request(info, 240, 40);
+  	gtk_fixed_put(GTK_FIXED(fixed), info, 30, 15);
 
 
   	button = gtk_button_new_with_label("OK");
-  	gtk_fixed_put(GTK_FIXED(fixed), button, 50, 80);
-  	gtk_widget_set_size_request(button, 80, 35);
+  	gtk_fixed_put(GTK_FIXED(fixed), button, 120, 60);
+  	gtk_widget_set_size_request(button, 60, 35);
 
   	g_signal_connect(G_OBJECT(button), "clicked", 
-       G_CALLBACK(button_clicked), window;
+       G_CALLBACK(button_clicked), window);
   	
   	g_signal_connect(G_OBJECT(window), "destroy", 
     	G_CALLBACK(close_window), NULL);
