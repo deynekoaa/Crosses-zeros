@@ -405,7 +405,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 						{
 							srand(time(NULL));
 							k = (rand()/3)-1;
-							m = (rand()/3)-1
+							m = (rand()/3)-1;
 						}
 						while (gField[k][m] != 0);
 						gField[k][m] = computerAnswer;
