@@ -2,7 +2,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#define DEBUG
+//#define DEBUG
 
 //define
 #define g_circle_radius 45
@@ -19,15 +19,15 @@ int playerAnswer = 1;
 gboolean gcomputerWin = FALSE;
 gboolean gfoundDanger = FALSE;
 gboolean gplayerWin = FALSE;
-
+gboolean gdeadHeat = FALSE;
 
 static void ClearField();
 static void DoDrawing(cairo_t *);
 static void DraweField(cairo_t *cr);
 static void ComputerWin(int i, int j);
 static void ComputerMove(int i, int j);	
-static void ResultWindow();
-
+static void ResultWindow(char* string);
+static gboolean DeadHeat();
 
 
 static void ClearField()
@@ -361,6 +361,26 @@ static void ChekingPlayerExactlyWin()
 	}
 }
 
+static gboolean DeadHeat()
+{
+	int i,j;
+	int filled = 0;
+	for (i = 0; i < g_field_size; i++)
+	{
+		for (j = 0; j < g_field_size; j++)
+		{
+			if (gField[i][j] != 0)
+				filled++;
+		}
+	}
+	if (filled == (g_field_size*g_field_size))
+		gdeadHeat = TRUE;
+	else
+		gdeadHeat = FALSE;
+
+}
+
+
 
 
 static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
@@ -379,50 +399,63 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		{
 			//player exatly win, we must say about it
 			gtk_widget_queue_draw(darea);
+			char* string = "Congratulation, you win!";
+			ResultWindow(string);
+			
 		}
 		else
 		{
-			gcomputerWin = FALSE;
-			ChekingComputerWin();
-			if (gcomputerWin)
+			gdeadHeat = FALSE;
+			DeadHeat();
+			if (gdeadHeat)
 			{
-				//computer do step and win, we must draw and say about it
 				gtk_widget_queue_draw(darea);
+				char* string = "Dead heat!";
+				ResultWindow(string);
 			}
-			else 
+			else
 			{
-				gfoundDanger = FALSE;
-				ChekingPlayerCanWin();
-				if (gfoundDanger)
+				gcomputerWin = FALSE;
+				ChekingComputerWin();
+				if (gcomputerWin)
 				{
-					//computer block player win step, and continue game
+					//computer do step and win, we must draw and say about it
 					gtk_widget_queue_draw(darea);
+					char* string = "Sorry, you lost!";
+					ResultWindow(string);
 				}
-				else
+				else 
 				{
-					if (gField[1][1] == 0)
+					gfoundDanger = FALSE;
+					ChekingPlayerCanWin();
+					if (gfoundDanger)
 					{
-						gField[1][1] = computerAnswer;
+						//computer block player win step, and continue game
+						gtk_widget_queue_draw(darea);
 					}
 					else
 					{
-						int m,k;
-						do 
+						if (gField[1][1] == 0)
 						{
-							srand(time(NULL));
-							k = (rand()%3);
-							m = (rand()%3);
+							gField[1][1] = computerAnswer;
 						}
-						while (gField[k][m] != 0);
-						gField[k][m] = computerAnswer;
-					}
-					gtk_widget_queue_draw(darea);		
+						else
+						{
+							int m,k;
+							do 
+							{
+								srand(time(NULL));
+								k = (rand()%3);
+								m = (rand()%3);
+							}
+							while (gField[k][m] != 0);
+							gField[k][m] = computerAnswer;
+						}
+						gtk_widget_queue_draw(darea);		
+					}	
 				}
-				
-			}
+			}		
 		}
-		
-		
 	}
 
 	//if (event->button == 3) {
