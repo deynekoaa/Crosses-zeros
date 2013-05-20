@@ -28,7 +28,7 @@ static void DoDrawing(cairo_t *);
 static void DrawField(cairo_t *cr);
 static void ComputerWin(int i, int j);
 static void ComputerMove(int i, int j);	
-static void ResultWindow(char* string);
+static void ChouseFirstPlayerWindow(char* string);
 static gboolean DeadHeat();
 
 
@@ -399,7 +399,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	if (event->button == 1) 
 	{
 		#ifdef DEBUG
-			ResultWindow();
+			//ResultWindow();
 		#endif
 		int x = event->x;
 		int y = event->y;
@@ -415,7 +415,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			gtk_widget_queue_draw(darea);
 			IsGameContinue = FALSE;
 			char* string = "Congratulation, you win!";
-			ResultWindow(string);
+			//ResultWindow(string);
 			
 		}
 		else
@@ -427,7 +427,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				gtk_widget_queue_draw(darea);
 				IsGameContinue = FALSE;
 				char* string = "Dead heat!";
-				ResultWindow(string);
+				//ResultWindow(string);
 			}
 			else
 			{
@@ -439,7 +439,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 					gtk_widget_queue_draw(darea);
 					IsGameContinue = FALSE;
 					char* string = "Sorry, you lost!";
-					ResultWindow(string);
+					//ResultWindow(string);
 				}
 				else 
 				{
@@ -494,21 +494,15 @@ void close_window(GtkWidget *widget, gpointer window)
     gtk_widget_destroy(GTK_WIDGET(widget));
 }
 
-static void ResultWindow(char* string)
+static void ChouseFirstPlayerWindow()
 {
 	GtkWidget *window;
   	GtkWidget *fixed;
   	GtkWidget *button;
   	GtkWidget *info;
   	
-  	#ifdef DEBUG
-  		string = "Congratulation, you win!";
-  	#endif
-
-
-
   	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  	gtk_window_set_title(GTK_WINDOW(window), "Information");
+  	gtk_window_set_title(GTK_WINDOW(window), "Choice of the first player");
   	gtk_widget_set_size_request(window, 300, 100);
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
