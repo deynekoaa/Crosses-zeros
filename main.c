@@ -65,16 +65,19 @@ static void DoDrawing(cairo_t *cr)
 			cairo_set_source_rgb(cr, 0, 0, 0);
 			if (gField[i][j] == playerAnswer)
 			{
+				cairo_new_path(cr);
 				cairo_set_line_width(cr, 6);
 				cairo_set_source_rgb(cr, 0.69, 0.19, 0);
 				cairo_move_to(cr, i*100+50+g_circle_radius, j*100+50);
 				cairo_arc(cr, i*100+50, j*100+50, g_circle_radius, 0, 2 * M_PI);
 				cairo_stroke_preserve(cr);
-				
+				cairo_set_source_rgb(cr, 0, 0, 0);
 				//cairo_close_path(cr);
 			}
+			else
 			if (gField[i][j] == computerAnswer)
 			{
+				cairo_new_path(cr);
 				cairo_set_line_width(cr, 6);
 				cairo_set_source_rgb(cr, 0.29, 0.60, 0);
 				cairo_move_to(cr, (i+1)*100-5, (j+1)*100-5);
@@ -82,6 +85,7 @@ static void DoDrawing(cairo_t *cr)
 				cairo_move_to(cr, (i+1)*100-5, j*100+5);
 				cairo_line_to(cr, i*100+5, (j+1)*100-5);
 				cairo_stroke_preserve(cr);
+				cairo_set_source_rgb(cr, 0, 0, 0);
 				//cairo_close_path(cr);
 			}
 		}
@@ -150,12 +154,12 @@ static void ChekingComputerWin()
 			if (gField[j][i] == computerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
-				free = i;			
+				free = j;			
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
 				//computer win!
 				gcomputerWin = TRUE;
-				ComputerMove(free,j);
+				ComputerMove(free,i);
 			}
 		}
 
