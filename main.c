@@ -10,6 +10,7 @@
 
 
 //global contains
+gboolean IsGameContinue = FALSE;
 GtkWidget *window;
 GtkWidget *darea;
 // the main field
@@ -412,6 +413,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		{
 			//player exatly win, we must say about it
 			gtk_widget_queue_draw(darea);
+			IsGameContinue = FALSE;
 			char* string = "Congratulation, you win!";
 			ResultWindow(string);
 			
@@ -423,6 +425,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			if (gdeadHeat)
 			{
 				gtk_widget_queue_draw(darea);
+				IsGameContinue = FALSE;
 				char* string = "Dead heat!";
 				ResultWindow(string);
 			}
@@ -434,6 +437,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				{
 					//computer do step and win, we must draw and say about it
 					gtk_widget_queue_draw(darea);
+					IsGameContinue = FALSE;
 					char* string = "Sorry, you lost!";
 					ResultWindow(string);
 				}
