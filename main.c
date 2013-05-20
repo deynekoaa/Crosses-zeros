@@ -1,6 +1,7 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 #include <math.h>
+#include <time.h>
 
 //#define DEBUG
 
@@ -10,7 +11,7 @@
 
 
 //global contains
-gboolean IsGameContinue = FALSE;
+gboolean IsGameContinue = TRUE;
 GtkWidget *window;
 GtkWidget *darea;
 // the main field
@@ -28,7 +29,7 @@ static void DoDrawing(cairo_t *);
 static void DrawField(cairo_t *cr);
 static void ComputerWin(int i, int j);
 static void ComputerMove(int i, int j);	
-static void ChouseFirstPlayerWindow(char* string);
+static void ChouseFirstPlayerWindow();
 static gboolean DeadHeat();
 
 
@@ -391,6 +392,17 @@ static gboolean DeadHeat()
 
 }
 
+static void ComputerStupidMove()
+{
+	int m,k;
+	do 
+	{
+		k = (rand()%g_field_size);
+		m = (rand()%g_field_size);
+	}
+	while (gField[k][m] != 0);
+	gField[k][m] = computerAnswer;
+}
 
 
 
@@ -403,7 +415,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		#endif
 		int x = event->x;
 		int y = event->y;
-		if(!CellDenermination(x,y))
+		if(!CellDenermination(x,y) || !IsGameContinue)
 		{
 			return;
 		}
@@ -452,21 +464,13 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 					}
 					else
 					{
-						if (gField[1][1] == 0)
+						if (gField[g_field_size/2][g_field_size/2] == 0)
 						{
-							gField[1][1] = computerAnswer;
+							gField[g_field_size/2][g_field_size/2] = computerAnswer;
 						}
 						else
 						{
-							int m,k;
-							do 
-							{
-								srand(time(NULL));
-								k = (rand()%3);
-								m = (rand()%3);
-							}
-							while (gField[k][m] != 0);
-							gField[k][m] = computerAnswer;
+							ComputerStupidMove();
 						}
 						gtk_widget_queue_draw(darea);		
 					}	
@@ -484,9 +488,20 @@ static void ComputerMove(int i, int j)
 	gField[i][j] = computerAnswer;
 }
 
-void button_clicked(GtkWidget *widget, gpointer data)
+void btnPlayer_clicked(GtkWidget *widget, gpointer data)
 {
+	IsGameContinue = TRUE;
+	gtk_widget_queue_draw(darea);
 	gtk_widget_destroy(GTK_WIDGET(data));
+}
+
+void btnComputer_clicked(GtkWidget *widget, gpointer data)
+{
+	IsGameContinue = TRUE;
+	ComputerStupidMove();
+	gtk_widget_queue_draw(darea);
+	gtk_widget_destroy(GTK_WIDGET(data));
+
 }
 
 void close_window(GtkWidget *widget, gpointer window)
@@ -496,36 +511,47 @@ void close_window(GtkWidget *widget, gpointer window)
 
 static void ChouseFirstPlayerWindow()
 {
-	GtkWidget *window;
+	GtkWidget *window2;
   	GtkWidget *fixed;
-  	GtkWidget *button;
+  	GtkWidget *btnPlayer;
+  	GtkWidget *btnComputer;
   	GtkWidget *info;
-  	
-  	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  	gtk_window_set_title(GTK_WINDOW(window), "Choice of the first player");
-  	gtk_widget_set_size_request(window, 300, 100);
-	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
-	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+
+  	char* string = "Who will go first?";
+  	IsGameContinue = FALSE;
+
+  	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  	gtk_window_set_title(GTK_WINDOW(window2), "Choice of the first player");
+  	gtk_widget_set_size_request(window2, 300, 100);
+	gtk_window_set_resizable(GTK_WINDOW(window2), FALSE);
+	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
 
   	fixed = gtk_fixed_new();
-  	gtk_container_add(GTK_CONTAINER(window), fixed);
+  	gtk_container_add(GTK_CONTAINER(window2), fixed);
 
   	info = gtk_label_new(string);
-  	gtk_widget_set_size_request(info, 240, 40);
   	gtk_fixed_put(GTK_FIXED(fixed), info, 30, 15);
+  	gtk_widget_set_size_request(info, 240, 40);
 
 
-  	button = gtk_button_new_with_label("OK");
-  	gtk_fixed_put(GTK_FIXED(fixed), button, 120, 60);
-  	gtk_widget_set_size_request(button, 60, 35);
+  	btnPlayer = gtk_button_new_with_label("Player");
+  	gtk_fixed_put(GTK_FIXED(fixed), btnPlayer, 45, 60);
+  	gtk_widget_set_size_request(btnPlayer, 80, 35);
 
-  	g_signal_connect(G_OBJECT(button), "clicked", 
-       G_CALLBACK(button_clicked), window);
+  	btnComputer = gtk_button_new_with_label("Computer");
+  	gtk_fixed_put(GTK_FIXED(fixed), btnComputer, 165, 60);
+  	gtk_widget_set_size_request(btnComputer, 80, 35);
+
+  	g_signal_connect(G_OBJECT(btnPlayer), "clicked", 
+       G_CALLBACK(btnPlayer_clicked), window2);
+
+  	g_signal_connect(G_OBJECT(btnComputer), "clicked", 
+       G_CALLBACK(btnComputer_clicked), window2);
   	
   	g_signal_connect(G_OBJECT(window), "destroy", 
-    	G_CALLBACK(close_window), NULL);
+    	G_CALLBACK(gtk_main_quit), NULL);
 
-  	gtk_widget_show_all(window);
+  	gtk_widget_show_all(window2);
 }
 
 
@@ -561,6 +587,8 @@ int main(int argc, char *argv[])
 
 	gtk_widget_show_all(window);
 
+	srand(time(NULL));
+	ChouseFirstPlayerWindow();
 	ClearField();
 
 	gtk_main();
