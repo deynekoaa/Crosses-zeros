@@ -163,7 +163,7 @@ static void ChekingComputerWin()
 			}
 		}
 
-		
+			
 		//cheking only once 
 		if (i == 0)
 		{
