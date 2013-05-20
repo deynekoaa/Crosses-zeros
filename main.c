@@ -13,7 +13,7 @@
 GtkWidget *window;
 GtkWidget *darea;
 // the main field
-int gField[3][3];
+int gField[g_field_size][g_field_size];
 int computerAnswer = 2;
 int playerAnswer = 1;
 gboolean gcomputerWin = FALSE;
@@ -21,9 +21,10 @@ gboolean gfoundDanger = FALSE;
 gboolean gplayerWin = FALSE;
 gboolean gdeadHeat = FALSE;
 
+
 static void ClearField();
 static void DoDrawing(cairo_t *);
-static void DraweField(cairo_t *cr);
+static void DrawField(cairo_t *cr);
 static void ComputerWin(int i, int j);
 static void ComputerMove(int i, int j);	
 static void ResultWindow(char* string);
@@ -46,7 +47,7 @@ static void ClearField()
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	cr = gdk_cairo_create(gtk_widget_get_window(widget));
-	DraweField(cr);
+	DrawField(cr);
 	DoDrawing(cr);
 	cairo_destroy(cr);
 	return FALSE;
@@ -92,7 +93,7 @@ static void DoDrawing(cairo_t *cr)
 	}   
 }
 
-static void DraweField(cairo_t *cr)
+static void DrawField(cairo_t *cr)
 {
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 4);
@@ -109,11 +110,16 @@ static void DraweField(cairo_t *cr)
 }
 
 //determinate where mouse coordinate
-static void CellDenermination(int x, int y)
+static gboolean CellDenermination(int x, int y)
 {
 	x /= 100;
 	y /= 100;
-	gField[x][y] = playerAnswer;
+	if (gField[x][y] == 0)
+	{
+		gField[x][y] = playerAnswer;
+		return TRUE;
+	}
+	return FALSE;
 }
 
 
@@ -396,7 +402,10 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 		#endif
 		int x = event->x;
 		int y = event->y;
-		CellDenermination(x,y);
+		if(!CellDenermination(x,y))
+		{
+			return;
+		}
 		gplayerWin = FALSE;
 		ChekingPlayerExactlyWin();
 		if (gplayerWin)
