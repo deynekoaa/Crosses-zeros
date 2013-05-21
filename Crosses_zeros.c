@@ -3,6 +3,16 @@
 
 //const int g_circle_radius = 45;
 //#define g_field_size       3;
+static void ClearField();
+static void DoDrawing(cairo_t *);
+static void DrawField(cairo_t *cr);
+//static void ComputerWin(int i, int j);
+static void ChouseFirstPlayerWindow();
+static void ResultWindow(char* string);
+static void DeadHeat();
+
+
+
 
 
 // the main field
@@ -40,7 +50,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data
 	return FALSE;
 }
 
-static void DoDrawing(cairo_t *cr)
+void DoDrawing(cairo_t *cr)
 {
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 0.5);
@@ -112,7 +122,7 @@ static gboolean CellDenermination(int x, int y)
 
 
 
-static gboolean DeadHeat()
+static void DeadHeat()
 {
 	int i,j;
 	int filled = 0;
@@ -128,7 +138,6 @@ static gboolean DeadHeat()
 		gdeadHeat = TRUE;
 	else
 		gdeadHeat = FALSE;
-
 }
 
 static void ComputerStupidMove()
@@ -160,7 +169,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			return;
 		}
 		gplayerWin = FALSE;
-		ChekingPlayerExactlyWin(gField, &gplayerWin, &playerAnswer, &computerAnswer);
+		ChekingPlayerExactlyWin(&gField, &gplayerWin, &playerAnswer, &computerAnswer);
 		if (gplayerWin)
 		{
 			//player exatly win, we must say about it
@@ -184,7 +193,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			else
 			{
 				gcomputerWin = FALSE;
-				ChekingComputerWin(gField, &gcomputerWin, &playerAnswer, &computerAnswer);
+				ChekingComputerWin(&gField, &gcomputerWin, &playerAnswer, &computerAnswer);
 				if (gcomputerWin)
 				{
 					//computer do step and win, we must draw and say about it
@@ -196,7 +205,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				else 
 				{
 					gfoundDanger = FALSE;
-					ChekingPlayerCanWin(gField, &gfoundDanger, &playerAnswer, &computerAnswer);
+					ChekingPlayerCanWin(&gField, &gfoundDanger, &playerAnswer, &computerAnswer);
 					if (gfoundDanger)
 					{
 						//computer block player win step, and continue game
@@ -222,11 +231,6 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	return TRUE;
 }
 
-	
-static void ComputerMove(int i, int j)
-{
-	gField[i][j] = computerAnswer;
-}
 
 static void btnPlayer_clicked(GtkWidget *widget, gpointer data)
 {

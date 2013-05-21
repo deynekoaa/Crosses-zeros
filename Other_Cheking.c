@@ -1,6 +1,7 @@
 #include "Crosses_zeros.h"
+#include "Other_Cheking.h"
 
-void ChekingPlayerExactlyWin(int *gField, gboolean *gplayerWin, int *playerAnswer, int *computerAnswer)
+void ChekingPlayerExactlyWin(int ***gField, gboolean *gplayerWin, int *playerAnswer, int *computerAnswer)
 {
 	//player exactly win
 	*gplayerWin = FALSE;
@@ -14,9 +15,11 @@ void ChekingPlayerExactlyWin(int *gField, gboolean *gplayerWin, int *playerAnswe
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (*gplayerWin) break;
-			if (*gField[i][j] == *playerAnswer)
+			printf("%i\n", i);
+			printf("%i\n", j);
+			if (*gField[i][j] == (*playerAnswer))
 				filling++;
-			if (*filling == g_field_size)
+			if (filling == g_field_size)
 			{
 				*gplayerWin = TRUE;
 			}
@@ -73,7 +76,7 @@ void ChekingPlayerExactlyWin(int *gField, gboolean *gplayerWin, int *playerAnswe
 
 
 //executing computer motion
-void ChekingPlayerCanWin(int *gField, gboolean *gfoundDanger, int *playerAnswer, int *computerAnswer)
+void ChekingPlayerCanWin(int ***gField, gboolean *gfoundDanger, int *playerAnswer, int *computerAnswer)
 {
 	*gfoundDanger = FALSE;
 	int i;
@@ -106,9 +109,9 @@ void ChekingPlayerCanWin(int *gField, gboolean *gfoundDanger, int *playerAnswer,
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (*gfoundDanger) break;
-			if (*gField[j][i] == *playerAnswer)
+			if (gField[j][i] == *playerAnswer)
 				filling++;
-			if (*gField[j][i] == 0)
+			if (gField[j][i] == 0)
 				free = j;			
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
@@ -129,9 +132,9 @@ void ChekingPlayerCanWin(int *gField, gboolean *gfoundDanger, int *playerAnswer,
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gfoundDanger) break;
-				if (*gField[j][j] == *playerAnswer)
+				if (gField[j][j] == *playerAnswer)
 					filling++;
-				if (*gField[j][j] == 0)
+				if (gField[j][j] == 0)
 					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
@@ -147,9 +150,9 @@ void ChekingPlayerCanWin(int *gField, gboolean *gfoundDanger, int *playerAnswer,
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gfoundDanger) break;
-				if (*gField[g_field_size - j-1][j] == *playerAnswer)
+				if (gField[g_field_size - j-1][j] == *playerAnswer)
 					filling++;
-				if (*gField[g_field_size - j-1][j] == 0)
+				if (gField[g_field_size - j-1][j] == 0)
 					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
@@ -163,7 +166,7 @@ void ChekingPlayerCanWin(int *gField, gboolean *gfoundDanger, int *playerAnswer,
 }
 
 //executing computer motion
-void ChekingComputerWin(int *gField, gboolean *gcomputerWin, int *playerAnswer, int *computerAnswer)
+void ChekingComputerWin(int ***gField, gboolean *gcomputerWin, int *playerAnswer, int *computerAnswer)
 {
 	*gcomputerWin = FALSE;
 	int i;
@@ -178,9 +181,9 @@ void ChekingComputerWin(int *gField, gboolean *gcomputerWin, int *playerAnswer, 
 		{
 			if (*gcomputerWin) break;
 			
-			if (*gField[i][j] == *computerAnswer)
+			if (gField[i][j] == *computerAnswer)
 				filling++;
-			if (*gField[i][j] == 0)
+			if (gField[i][j] == 0)
 				free = j;			
 			if ((filling == g_field_size -1 )&&(free >= 0))
 			{
@@ -196,7 +199,7 @@ void ChekingComputerWin(int *gField, gboolean *gcomputerWin, int *playerAnswer, 
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (*gcomputerWin) break;
-			if (*gField[j][i] == *computerAnswer)
+			if (gField[j][i] == *computerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
 				free = j;			
@@ -218,9 +221,9 @@ void ChekingComputerWin(int *gField, gboolean *gcomputerWin, int *playerAnswer, 
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gcomputerWin) break;
-				if (*gField[j][j] == *computerAnswer)
+				if (gField[j][j] == *computerAnswer)
 					filling++;
-				if (*gField[j][j] == 0)
+				if (gField[j][j] == 0)
 					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
@@ -236,9 +239,9 @@ void ChekingComputerWin(int *gField, gboolean *gcomputerWin, int *playerAnswer, 
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gcomputerWin) break;
-				if (*gField[g_field_size - j][j] == *computerAnswer)
+				if (gField[g_field_size - j][j] == *computerAnswer)
 					filling++;
-				if (*gField[g_field_size - j][j] == 0)
+				if (gField[g_field_size - j][j] == 0)
 					free = g_field_size - j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
@@ -251,7 +254,7 @@ void ChekingComputerWin(int *gField, gboolean *gcomputerWin, int *playerAnswer, 
 	}
 }
 
-static void ComputerMove(int gField, int *computerAnswer, int i, int j)
+void ComputerMove(int ***gField, int *computerAnswer, int i, int j)
 {
-	gField[i][j] = computerAnswer;
+	*gField[i][j] = *computerAnswer;
 }
