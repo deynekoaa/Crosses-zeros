@@ -109,9 +109,9 @@ void ChekingPlayerCanWin(int ***gField, gboolean *gfoundDanger, int *playerAnswe
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (*gfoundDanger) break;
-			if (gField[j][i] == *playerAnswer)
+			if (*gField[j][i] == *playerAnswer)
 				filling++;
-			if (gField[j][i] == 0)
+			if (*gField[j][i] == 0)
 				free = j;			
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
@@ -132,9 +132,9 @@ void ChekingPlayerCanWin(int ***gField, gboolean *gfoundDanger, int *playerAnswe
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gfoundDanger) break;
-				if (gField[j][j] == *playerAnswer)
+				if (*gField[j][j] == *playerAnswer)
 					filling++;
-				if (gField[j][j] == 0)
+				if (*gField[j][j] == 0)
 					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
@@ -150,9 +150,9 @@ void ChekingPlayerCanWin(int ***gField, gboolean *gfoundDanger, int *playerAnswe
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gfoundDanger) break;
-				if (gField[g_field_size - j-1][j] == *playerAnswer)
+				if (*gField[g_field_size - j-1][j] == *playerAnswer)
 					filling++;
-				if (gField[g_field_size - j-1][j] == 0)
+				if (*gField[g_field_size - j-1][j] == 0)
 					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
@@ -181,7 +181,7 @@ void ChekingComputerWin(int ***gField, gboolean *gcomputerWin, int *playerAnswer
 		{
 			if (*gcomputerWin) break;
 			
-			if (gField[i][j] == *computerAnswer)
+			if (*gField[i][j] == *computerAnswer)
 				filling++;
 			if (gField[i][j] == 0)
 				free = j;			
@@ -199,7 +199,7 @@ void ChekingComputerWin(int ***gField, gboolean *gcomputerWin, int *playerAnswer
 		for (j = 0; j < g_field_size; j++)
 		{
 			if (*gcomputerWin) break;
-			if (gField[j][i] == *computerAnswer)
+			if (*gField[j][i] == *computerAnswer)
 				filling++;
 			if (gField[j][i] == 0)
 				free = j;			
@@ -221,7 +221,7 @@ void ChekingComputerWin(int ***gField, gboolean *gcomputerWin, int *playerAnswer
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gcomputerWin) break;
-				if (gField[j][j] == *computerAnswer)
+				if (*gField[j][j] == *computerAnswer)
 					filling++;
 				if (gField[j][j] == 0)
 					free = j;			
@@ -239,7 +239,7 @@ void ChekingComputerWin(int ***gField, gboolean *gcomputerWin, int *playerAnswer
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gcomputerWin) break;
-				if (gField[g_field_size - j][j] == *computerAnswer)
+				if (*gField[g_field_size - j][j] == *computerAnswer)
 					filling++;
 				if (gField[g_field_size - j][j] == 0)
 					free = g_field_size - j;			

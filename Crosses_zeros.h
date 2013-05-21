@@ -9,5 +9,3 @@
 
 #define g_circle_radius 45
 #define g_field_size 3
-
-void ChekingPlayerExactlyWin(int **gField, gboolean *gplayerWin, int *playerAnswer, int *computerAnswer);
