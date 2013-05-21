@@ -567,8 +567,6 @@ static void ResultWindow(char* string)
 		GTK_MESSAGE_INFO,GTK_BUTTONS_OK, string,NULL);
   	g_signal_connect_swapped (resultWindow, "response", G_CALLBACK (gtk_main_quit), NULL);
 	gtk_dialog_run (GTK_DIALOG (resultWindow));
- 	
-
 }
 
 
