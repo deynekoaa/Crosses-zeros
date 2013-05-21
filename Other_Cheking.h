@@ -4,6 +4,9 @@
 #include <time.h>
 #include <stdlib.h>
 
+
+//#define DEBUG
+
 #define g_circle_radius 45
 #define g_field_size 3
 

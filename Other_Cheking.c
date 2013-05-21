@@ -59,7 +59,7 @@ void ChekingPlayerExactlyWin(int gField[g_field_size][g_field_size], gboolean *g
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gplayerWin) break;
-				if (gField[g_field_size - j][j] == *playerAnswer)
+				if (gField[g_field_size - j-1][j] == *playerAnswer)
 					filling++;
 				if (filling == g_field_size)
 				{
@@ -204,7 +204,7 @@ void ChekingComputerWin(int gField[g_field_size][g_field_size], gboolean *gcompu
 			if ((filling == g_field_size - 1)&&(free >= 0))
 			{
 				//computer win!
-				*gcomputerWin = TRUE;
+				(*gcomputerWin) = TRUE;
 				ComputerMove(gField, computerAnswer, free, i);
 			}
 		}
@@ -237,16 +237,20 @@ void ChekingComputerWin(int gField[g_field_size][g_field_size], gboolean *gcompu
 			for (j = 0; j < g_field_size; j++)
 			{
 				if (*gcomputerWin) break;
-				if (gField[g_field_size - j][j] == *computerAnswer)
+				if (gField[g_field_size - j-1][j] == *computerAnswer)
 					filling++;
-				if (gField[g_field_size - j][j] == 0)
-					free = g_field_size - j;			
+				if (gField[g_field_size - j-1][j] == 0)
+					free = j;			
 				if ((filling == g_field_size -1 )&&(free >= 0))
 				{
 					//computer win!
 					*gcomputerWin = TRUE;
-					ComputerMove(gField, computerAnswer, free, j);
+
+					ComputerMove(gField, computerAnswer, g_field_size - free - 1, free);
 				}
+				#ifdef DEBUG
+					//printf("%i\n", *gcomputerWin);
+				#endif
 			}
 		}
 	}

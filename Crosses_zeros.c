@@ -159,8 +159,8 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	if (event->button == 1) 
 	{
 		#ifdef DEBUG
-			char* str = "2";
-			ResultWindow(str);
+			//char* str = "2";
+			//ResultWindow(str);
 		#endif
 		int x = event->x;
 		int y = event->y;
@@ -223,17 +223,17 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 						}
 								
 					}
-					gtk_widget_queue_draw(darea);	
-				}
-				gdeadHeat = FALSE;
-				DeadHeat();
-				if (gdeadHeat)
-				{
 					gtk_widget_queue_draw(darea);
-					IsGameContinue = FALSE;
-					char* string = "Dead heat!";
-					ResultWindow(string);
-				}
+					gdeadHeat = FALSE;
+					DeadHeat();
+					if (gdeadHeat)
+					{
+						gtk_widget_queue_draw(darea);
+						IsGameContinue = FALSE;
+						char* string = "Dead heat!";
+						ResultWindow(string);
+					}	
+				}				
 			}		
 		}
 	}
@@ -311,7 +311,7 @@ static void ChouseFirstPlayerWindow()
 static void ResultWindow(char* string)
 {
 	#ifdef DEBUG
-  		string = "Congratulation, you win!";
+  		//string = "Congratulation, you win!";
   	#endif
 
 	GtkWidget *resultWindow;
