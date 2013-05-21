@@ -30,6 +30,7 @@ static void DrawField(cairo_t *cr);
 static void ComputerWin(int i, int j);
 static void ComputerMove(int i, int j);	
 static void ChouseFirstPlayerWindow();
+static void ResultWindow(char* string);
 static gboolean DeadHeat();
 
 
@@ -411,7 +412,8 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	if (event->button == 1) 
 	{
 		#ifdef DEBUG
-			//ResultWindow();
+		char* str = "2";
+			ResultWindow(str);
 		#endif
 		int x = event->x;
 		int y = event->y;
@@ -427,7 +429,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			gtk_widget_queue_draw(darea);
 			IsGameContinue = FALSE;
 			char* string = "Congratulation, you win!";
-			//ResultWindow(string);
+			ResultWindow(string);
 			
 		}
 		else
@@ -439,7 +441,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				gtk_widget_queue_draw(darea);
 				IsGameContinue = FALSE;
 				char* string = "Dead heat!";
-				//ResultWindow(string);
+				ResultWindow(string);
 			}
 			else
 			{
@@ -451,7 +453,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 					gtk_widget_queue_draw(darea);
 					IsGameContinue = FALSE;
 					char* string = "Sorry, you lost!";
-					//ResultWindow(string);
+					ResultWindow(string);
 				}
 				else 
 				{
@@ -553,6 +555,22 @@ static void ChouseFirstPlayerWindow()
 
   	gtk_widget_show_all(window2);
 }
+
+static void ResultWindow(char* string)
+{
+	#ifdef DEBUG
+  		string = "Congratulation, you win!";
+  	#endif
+
+	GtkWidget *resultWindow;
+	resultWindow = gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_INFO,GTK_BUTTONS_OK, string,NULL);
+  	g_signal_connect_swapped (resultWindow, "response", G_CALLBACK (gtk_main_quit), NULL);
+	gtk_dialog_run (GTK_DIALOG (resultWindow));
+ 	
+
+}
+
 
 
 
