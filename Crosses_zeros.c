@@ -159,7 +159,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 	if (event->button == 1) 
 	{
 		#ifdef DEBUG
-		char* str = "2";
+			char* str = "2";
 			ResultWindow(str);
 		#endif
 		int x = event->x;
@@ -169,7 +169,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			return;
 		}
 		gplayerWin = FALSE;
-		ChekingPlayerExactlyWin(&gField, &gplayerWin, &playerAnswer, &computerAnswer);
+		ChekingPlayerExactlyWin(gField, &gplayerWin, &playerAnswer, &computerAnswer);
 		if (gplayerWin)
 		{
 			//player exatly win, we must say about it
@@ -193,7 +193,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			else
 			{
 				gcomputerWin = FALSE;
-				ChekingComputerWin(&gField, &gcomputerWin, &playerAnswer, &computerAnswer);
+				ChekingComputerWin(gField, &gcomputerWin, &playerAnswer, &computerAnswer);
 				if (gcomputerWin)
 				{
 					//computer do step and win, we must draw and say about it
@@ -205,11 +205,11 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				else 
 				{
 					gfoundDanger = FALSE;
-					ChekingPlayerCanWin(&gField, &gfoundDanger, &playerAnswer, &computerAnswer);
+					ChekingPlayerCanWin(gField, &gfoundDanger, &playerAnswer, &computerAnswer);
 					if (gfoundDanger)
 					{
 						//computer block player win step, and continue game
-						gtk_widget_queue_draw(darea);
+						
 					}
 					else
 					{
@@ -221,8 +221,18 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 						{
 							ComputerStupidMove();
 						}
-						gtk_widget_queue_draw(darea);		
-					}	
+								
+					}
+					gtk_widget_queue_draw(darea);	
+				}
+				gdeadHeat = FALSE;
+				DeadHeat();
+				if (gdeadHeat)
+				{
+					gtk_widget_queue_draw(darea);
+					IsGameContinue = FALSE;
+					char* string = "Dead heat!";
+					ResultWindow(string);
 				}
 			}		
 		}
