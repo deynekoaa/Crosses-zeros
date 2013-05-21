@@ -1,4 +1,4 @@
-TARGETS=main
+TARGETS=Crosses_zeros
 LIBS=`pkg-config --cflags --libs gtk+-2.0`
 all: $(TARGETS)
 

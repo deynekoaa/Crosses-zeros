@@ -1,6 +1,10 @@
 #include "Crosses_zeros.h"
 
 
+//const int g_circle_radius = 45;
+//#define g_field_size       3;
+
+
 // the main field
 int gField[g_field_size][g_field_size];
 //global contains
@@ -156,7 +160,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			return;
 		}
 		gplayerWin = FALSE;
-		ChekingPlayerExactlyWin(&gField, &gplayerWin, &g_field_size, &playerAnswer, &computerAnswer);
+		ChekingPlayerExactlyWin(gField, &gplayerWin, &g_field_size, &playerAnswer, &computerAnswer);
 		if (gplayerWin)
 		{
 			//player exatly win, we must say about it
@@ -180,7 +184,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 			else
 			{
 				gcomputerWin = FALSE;
-				ChekingComputerWin(&gField, &gcomputerWin, &g_field_size, &playerAnswer, &computerAnswer);
+				ChekingComputerWin(gField, &gcomputerWin, &g_field_size, &playerAnswer, &computerAnswer);
 				if (gcomputerWin)
 				{
 					//computer do step and win, we must draw and say about it
@@ -192,7 +196,7 @@ static gboolean clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_
 				else 
 				{
 					gfoundDanger = FALSE;
-					ChekingPlayerCanWin(&gField, &gfoundDanger, &g_field_size, &playerAnswer, &computerAnswer);
+					ChekingPlayerCanWin(gField, &gfoundDanger, &g_field_size, &playerAnswer, &computerAnswer);
 					if (gfoundDanger)
 					{
 						//computer block player win step, and continue game
