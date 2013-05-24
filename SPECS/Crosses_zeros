@@ -1,0 +1,34 @@
+Name:		Crosses_zeros
+Version:	1.0
+Release:	1%{?dist}
+Summary:	Game crosses-zeros
+Group:		kostap
+License:	kostap's license
+URL:		https://github.com/kostap8/Crosses-zeros
+Source:		%{name}-%{version}.tar.gz
+BuildRoot:	/tmp/%{name}
+
+%description
+Game crosses-zeros
+
+%prep
+%setup -c %{name}
+
+%build
+make
+
+%install
+mkdir -p $RPM_BUILD_ROOT/usr/bin
+cp %{name} $RPM_BUILD_ROOT/usr/bin
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+/usr/bin/%{name}
+
+%attr(0755,root,root)/usr/bin/%{name}
+
+%changelog
+* Sat May 25 2013 Deyneko
+- Added /usr/bin/Crosses_zeros
